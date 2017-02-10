@@ -139,7 +139,7 @@ elseif achrom == 2
         imwrite(bitmap,filename,'jpeg');
         maxContrast = maxContrast / 2;
         contrast = maxContrast * conA;
-        lumAmp = lumAmp / 2;
+      
     end
     
 end
