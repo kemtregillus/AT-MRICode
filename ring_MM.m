@@ -3,7 +3,7 @@
 close all;
 clear all;
 clearvars;
-PsychDefaultSetup(2);
+%PsychDefaultSetup(2);
 Screen('Preference', 'SkipSyncTests', 1);
 screens = Screen('Screens');
 % set up keys
@@ -17,12 +17,12 @@ escapeKey = KbName('ESCAPE');
 % subj = input(prompt);
 % window and screen set up
 %load the calibration file
-load colorInfo_Renown;
+load colorInfo_Renown2;
 
 %determine the highest screen number
 screenNumber = max(Screen('Screens'));
 
-[MWLcenter] = ConvertColors('mwlrgb',[0 0 18])%,colorInfo);
+[MWLcenter] = ConvertColors('mwlrgb',[0 0 18],colorInfo);
 %open a window on the designated monitor
 [w, screenRect]= Screen('OpenWindow',screenNumber, MWLcenter.*255);%,[0 0 1000 1000 ]);
 
@@ -47,10 +47,10 @@ RestoreCluts;
 [xCenter, yCenter] = RectCenter(screenRect);%%center points
 
 fixation = [0 0 20 20];
-stepSize = .01;
+stepSize = .05; %.01;
 lumCon = .2;
 lumVal = -lumCon:stepSize:lumCon;
-numTrials = 4;
+numTrials = 2;
 
 Screen('DrawText',w,'Press Key to Continue',xCenter-150,yCenter+30,[1 1 1])
 Screen('Flip', w);
@@ -88,7 +88,7 @@ c = 1;
 trial = 1;
 KbQueueCreate();
 KbQueueStart();
-for i = 1:numTrials
+for i = 1:(numTrials*2)
     
     while run == 1
         [keyIsDown, secs, keyCode] = KbQueueCheck();
@@ -106,6 +106,7 @@ for i = 1:numTrials
             lumAmp(trial,c) = lumVal(textPoint);
             run = 0;
             down = 1;
+            textPoint = randi(size(lumVal));
         elseif keyIsDown == 0
             down = 0;
         end
@@ -141,6 +142,10 @@ for i = 1:numTrials
         run = 1;
     end
 end
-save lumAmp;
+lumAveS = sum(lumAmp(:,2)) / numTrials;
+lumAveLM = sum(lumAmp(:,1)) / numTrials;
+save('lumAmp.mat','lumAmp');
+save('lumAveLM.mat','lumAveLM');
+save('lumAveS.mat','lumAveS');
 sca
 

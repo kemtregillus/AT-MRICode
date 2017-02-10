@@ -1,6 +1,6 @@
-function [texture] = stimGen(angle,phase,achrom,stepSize,lumCon,w,screenRect,xCenter,yCenter,fixation,MWLcenter,screenNumber)
+function [texture] = stimGen(angle,phase,achrom,stepSize,lumCon,w,screenRect,xCenter,yCenter,fixation,MWLcenter,screenNumber,lumAmp)
 
-load colorInfo_renown;
+load colorInfo_renown2;
 %determine the highest screen number
 
 
@@ -59,12 +59,12 @@ if achrom == 0
 %                         xyVals(i,2) = y;
 %                         xyVals(i,3) = z;
 %             [val] = ConvertColors('mwlrgb',[x y lum(i)]);%,colorInfo)
-            [val] = ConvertColors('mwlrgb',[x y lum(i)]);%,colorInfo)
+            [val] = ConvertColors('mwlrgb',[x y lum(i)],colorInfo);
             vals(i,:) = val;
         end
         
-%         scatter(xyVals(:,2),lum')
-
+        %         scatter(xyVals(:,2),lum')
+        
         
         ringSize = 50;
         for i = 1:5
@@ -77,13 +77,13 @@ if achrom == 0
             
             fixRect = CenterRectOnPointd(fixation,xCenter,yCenter);
             Screen('FillOval',w, MWLcenter,fixRect);
-              
+            
         end
         Screen('Flip', w);
         bitmap = Screen('GetImage', w);
         texture(textPoint) = Screen('MakeTexture',w,bitmap);
         filename = strcat('text',num2str(phase),num2str(angle),num2str(textPoint),'.jpg');
-%         imwrite(bitmap,filename,'jpeg');
+        %         imwrite(bitmap,filename,'jpeg');
         textPoint = textPoint+1;
     end
     
@@ -93,7 +93,7 @@ elseif achrom == 1
     lum = ((.25*conA+1) * maxLum);
     for i = 1:imSize
         [x,y] = xyconvert(angle,0,'MWLPol','MWLCart');
-        [val] = ConvertColors('mwlrgb',[x y lum(i)]);%,colorInfo)
+        [val] = ConvertColors('mwlrgb',[x y lum(i)],colorInfo);
         vals(i,:) = val;
     end
     ringSize = 50;
@@ -113,7 +113,38 @@ elseif achrom == 1
     bitmap = Screen('GetImage', w);
     texture(1) = Screen('MakeTexture',w,bitmap);
     filename = strcat('text',num2str(phase),'achrom','.jpg');
-%     imwrite(bitmap,filename,'jpeg');
-    
+    %     imwrite(bitmap,filename,'jpeg');
+elseif achrom == 2
+    texture = NaN(1,1);
+    for j = 1:4
+        lum = ((lumAmp*conA+1) * maxLum);
+        lum2 = ((lumAmp*conA) * maxLum);
+        for i = 1:imSize
+            x = contrast(i) .* cosd(lum2(i)).* cosd(angle);
+            y = contrast(i) .* cosd(lum2(i)).* sind(angle);
+            [val] = ConvertColors('mwlrgb',[x y lum(i)],colorInfo);
+            vals(i,:) = val;
+        end
+        ringSize = 50;
+        for i = 1:5
+            for k = 1:imSize
+                ringSize = ringSize + 1;
+                ringRect = CenterRectOnPointd([0 0 ringSize ringSize],xCenter,yCenter);
+                Screen('FrameOval',w,vals(k,:).*255,ringRect,1);
+                
+            end
+            
+            fixRect = CenterRectOnPointd(fixation,xCenter,yCenter);
+            Screen('FillOval',w, MWLcenter,fixRect);
+            
+        end
+        Screen('Flip', w);
+        bitmap = Screen('GetImage', w);
+        texture(j) = Screen('MakeTexture',w,bitmap);
+        filename = strcat('text',num2str(maxContrast),num2str(phase),num2str(angle),'.jpg');
+        imwrite(bitmap,filename,'jpeg');
+        maxContrast = maxContrast / 2;
+        contrast = maxContrast * conA;
+    end
 end
 

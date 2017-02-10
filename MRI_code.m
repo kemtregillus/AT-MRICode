@@ -3,7 +3,7 @@
 close all;
 clear all;
 clearvars;
-PsychDefaultSetup(2);
+
 Screen('Preference', 'SkipSyncTests', 1);
 screens = Screen('Screens');
 % set up keys
@@ -17,12 +17,12 @@ escapeKey = KbName('ESCAPE');
 % subj = input(prompt);
 % window and screen set up
 %load the calibration file
-load colorInfo_Renown;
+load colorInfo_Renown2;
 
 %determine the highest screen number
 screenNumber = max(Screen('Screens'));
 
-[MWLcenter] = ConvertColors('mwlrgb',[0 0 18])%,colorInfo);
+[MWLcenter] = ConvertColors('mwlrgb',[0 0 18],colorInfo);
 %open a window on the designated monitor
 [w, screenRect]= Screen('OpenWindow',screenNumber, MWLcenter.*255);%,[0 0 1000 1000 ]);
 
@@ -55,15 +55,16 @@ numTrials = 10;
 Screen('DrawText',w,'Press Key to Continue',xCenter-150,yCenter+30,[1 1 1])
 Screen('Flip', w);
 % HideCursor();
-
+load lumAveLM.mat
+load lumAveS.mat
+lumAmpLM = lumAveLM;
+lumAmpS = lumAveS;
 % % 
-[textureLM1] = stimGen(0,.5,0,stepSize,lumCon,w,screenRect,xCenter,yCenter,fixation,MWLcenter,screenNumber);
-[textureLM2] = stimGen(0,1,0,stepSize,lumCon,w,screenRect,xCenter,yCenter,fixation,MWLcenter,screenNumber);
-[textureS1] = stimGen(90,.5,0,stepSize,lumCon,w,screenRect,xCenter,yCenter,fixation,MWLcenter,screenNumber);
-[textureS2] = stimGen(90,1,0,stepSize,lumCon,w,screenRect,xCenter,yCenter,fixation,MWLcenter,screenNumber); 
-[textureA1] = stimGen(0,.5,1,stepSize,lumCon,w,screenRect,xCenter,yCenter,fixation,MWLcenter,screenNumber);
-[textureA2] = stimGen(0,1,1,stepSize,lumCon,w,screenRect,xCenter,yCenter,fixation,MWLcenter,screenNumber);
-  
+[textureLM1] = stimGen(0,0.5,2,stepSize,lumCon,w,screenRect,xCenter,yCenter,fixation,MWLcenter,screenNumber,lumAmpLM);
+[textureLM2] = stimGen(0,1,2,stepSize,lumCon,w,screenRect,xCenter,yCenter,fixation,MWLcenter,screenNumber,lumAmpLM);
+[textureS1] = stimGen(90,0.5,2,stepSize,lumCon,w,screenRect,xCenter,yCenter,fixation,MWLcenter,screenNumber,lumAmpLM);
+[textureS2] = stimGen(90,1,2,stepSize,lumCon,w,screenRect,xCenter,yCenter,fixation,MWLcenter,screenNumber,lumAmpLM); 
+
 
   
   
