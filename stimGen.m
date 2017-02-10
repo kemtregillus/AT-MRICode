@@ -131,12 +131,9 @@ elseif achrom == 2
                 ringSize = ringSize + 1;
                 ringRect = CenterRectOnPointd([0 0 ringSize ringSize],xCenter,yCenter);
                 Screen('FrameOval',w,vals(k,:).*255,ringRect,1);
-                
             end
-            
             fixRect = CenterRectOnPointd(fixation,xCenter,yCenter);
             Screen('FillOval',w, MWLcenter,fixRect);
-            
         end
         Screen('Flip', w);
         bitmap = Screen('GetImage', w);
@@ -145,6 +142,8 @@ elseif achrom == 2
         imwrite(bitmap,filename,'jpeg');
         maxContrast = maxContrast / 2;
         contrast = maxContrast * conA;
+      
     end
+    
 end
 

@@ -132,7 +132,6 @@ while(seqNum <= numRuns && running)
         curTime = GetSecs;
         if (curTime - imgTime >= dur)
             i = i+1;
-            seqNum = seqNum+1;
             imgTime = curTime;
         end
         [keyIsDown,secs,keyCode] = KbCheck;
@@ -147,3 +146,74 @@ while(seqNum <= numRuns && running)
 end
 
 sca
+% curTime = GetSecs();
+% time = GetSecs();
+% 
+% delay = .5;
+% delayTimer = delay;
+% 
+% ti = 0;
+% textPoint = randi(size(lumVal));
+% down = 0;
+% changeText = 0;
+% run = 1;
+% % c = 1;
+% trial = 1;
+% KbQueueCreate();
+% KbQueueStart();
+% for i = 1:numTrials
+%     
+%     while run == 1
+%         [keyIsDown, secs, keyCode] = KbQueueCheck();
+%         if keyCode(upKey) && down == 0
+%             if textPoint < size(lumVal,2)
+%                 textPoint = textPoint+1
+%             end
+%             down = 1;
+%         elseif keyCode(downKey) && down ==0
+%             if textPoint > 1
+%                 textPoint = textPoint-1
+%             end
+%             down = 1;
+%         elseif keyCode(enterKey) && down ==0
+%             lumAmp(trial,c) = lumVal(textPoint);
+%             run = 0;
+%             down = 1;
+%         elseif keyIsDown == 0
+%             down = 0;
+%         end
+%         
+%         delayTimer = delayTimer - (GetSecs - time);
+%         time = GetSecs;
+%         if delayTimer <= 0
+%             ti = ti+1;
+%             delayTimer = delay;
+%         end
+%         switch mod(ti,4)
+%             case 0
+%                 Screen('DrawTexture',w,texture1(textPoint))
+%             case 1
+%                 Screen('DrawTexture',w,textureA1(1))
+%             case 2
+%                 Screen('DrawTexture',w,texture2(textPoint))
+%             case 3
+%                 Screen('DrawTexture',w,textureA2(1))
+%         end
+%         Screen('Flip',w);
+%     end
+%     if texture1 == textureLM1
+%         texture1 = textureS1;
+%         texture2 = textureS2;
+%         c = 2;
+%         run = 1;
+%     elseif texture1 == textureS1
+%         texture1 = textureLM1;
+%         texture2 = textureLM2;
+%         trial = trial + 1;
+%         c = 1;
+%         run = 1;
+%     end
+% end
+% save lumAmp;
+% sca
+% 
